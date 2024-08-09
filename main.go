@@ -51,6 +51,31 @@ const pageTemplate = `
     margin-top: 2.5%;
     float: right;
   }
+  ul {
+    list-style-type: none;
+  }
+  li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  a {
+    text-decoration: none;
+  }
+  a:link {
+    color: black;
+  }
+  a:visited {
+    color: black;
+  }
+  a:hover {
+    color: black;
+    font-weight: bold;
+  }
+  a:active {
+    color: grey;
+    font-weight: bold;
+  }
   </style>
 </head>
 <body>
