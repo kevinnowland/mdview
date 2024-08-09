@@ -146,45 +146,15 @@ func main() {
 	http.HandleFunc("/", IndexHandler(nav))
 
 	for _, path := range paths {
-		p := path
-		url, err := ConvertPathToUrl(dirPath, p)
+		url, err := ConvertPathToUrl(dirPath, path)
 		if err != nil {
 			fmt.Printf("error converting path to url: %s\n", err.Error())
 			os.Exit(1)
 		}
-		http.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
-			mdBytes, err := os.ReadFile(p)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
-				return
-			}
-
-			mdHtml := bytes.Buffer{}
-			if err := md.Convert(mdBytes, &mdHtml); err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
-				return
-			}
-
-			markdownPage := Page{
-				Nav:  nav,
-				Data: mdHtml.String(),
-			}
-
-			t := template.Must(template.New("page").Parse(pageTemplate))
-			err = t.ExecuteTemplate(w, "PAGE", markdownPage)
-
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
-				return
-			}
-		})
+		http.HandleFunc(url, MarkdownHandler(nav, path, md))
 	}
 
 	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-	// TODO: handle expected shutdown more gracefully
 	if err != nil {
 		fmt.Printf("shutting down: %s\n", err.Error())
 		os.Exit(1)
@@ -246,6 +216,38 @@ func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 
 		t := template.Must(template.New("page").Parse(pageTemplate))
 		err := t.ExecuteTemplate(w, "PAGE", indexPage)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			return
+		}
+	}
+}
+
+func MarkdownHandler(nav Nav, path string, md goldmark.Markdown) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		mdBytes, err := os.ReadFile(path)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			return
+		}
+
+		mdHtml := bytes.Buffer{}
+		if err := md.Convert(mdBytes, &mdHtml); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			return
+		}
+
+		markdownPage := Page{
+			Nav:  nav,
+			Data: mdHtml.String(),
+		}
+
+		t := template.Must(template.New("page").Parse(pageTemplate))
+		err = t.ExecuteTemplate(w, "PAGE", markdownPage)
+
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
