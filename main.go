@@ -228,7 +228,8 @@ func DefaultHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 				WriteInternalServerError(w, err)
 				return
 			}
-		} else if r.Host == fmt.Sprintf("localhost:%d", port) && filepath.Ext(r.URL.Path) != "" {
+		} else if strings.Contains(r.Header.Get("Referer"), fmt.Sprintf("localhost:%d", port)) {
+			// try to only serve files that came from a page we know about
 			http.ServeFile(w, r, fmt.Sprintf("%s%s", dirPath, r.URL.Path))
 			return
 		} else {
