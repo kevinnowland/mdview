@@ -12,6 +12,8 @@ support.
 mdview PATH/TO/MARKDOWN/FOLDERS
 ```
 
+Set the `-d` flag to use darkmode.
+
 For help:
 
 ```bash
@@ -28,5 +30,4 @@ go install github.com/kevinnowland/mdview@latest
 
 - Add offline mathjax support
 - Add 404 for random URLs
-- Darkmode
 - Better order in sidebar

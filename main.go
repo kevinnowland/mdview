@@ -37,16 +37,18 @@ type Page struct {
 }
 
 var (
-	dirPath string
-	port    int
-	logger  *slog.Logger
-	t       *template.Template
+	dirPath      string
+	port         int
+	logger       *slog.Logger
+	pageTemplate *template.Template
 )
 
 func init() {
 	var verbose bool
+	var darkmode bool
 	flag.IntVar(&port, "port", 8080, "port to run server on")
 	flag.BoolVar(&verbose, "v", false, "log verbosely")
+	flag.BoolVar(&darkmode, "d", false, "use darkmode")
 
 	flag.Parse()
 	args := flag.Args()
@@ -73,7 +75,11 @@ func init() {
 		os.Exit(1)
 	}
 
-	t = template.Must(template.New("page").Parse(pageTemplate))
+	if darkmode {
+		pageTemplate = template.Must(template.New("page").Parse(PageDarkTemplate))
+	} else {
+		pageTemplate = template.Must(template.New("page").Parse(PageTemplate))
+	}
 }
 
 func main() {
@@ -189,7 +195,7 @@ func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
 		}
 
-		err := t.ExecuteTemplate(w, "PAGE", indexPage)
+		err := pageTemplate.ExecuteTemplate(w, "PAGE", indexPage)
 		if err != nil {
 			WriteInternalServerError(w, err)
 			return
@@ -216,7 +222,7 @@ func MarkdownHandler(nav Nav, path string, md goldmark.Markdown) func(w http.Res
 			Data: mdHtml.String(),
 		}
 
-		err = t.ExecuteTemplate(w, "PAGE", markdownPage)
+		err = pageTemplate.ExecuteTemplate(w, "PAGE", markdownPage)
 
 		if err != nil {
 			WriteInternalServerError(w, err)
