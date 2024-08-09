@@ -9,7 +9,12 @@ support for mathjax (online only).
 mdview PATH/TO/MARKDOWN/FOLDERS
 ```
 
+![mdview screenshot](screenshot.png?raw=true "mdview screenshot")
+
+
 Set the `-d` flag to use darkmode.
+
+![mdview screenshot darkmode](screenshot_dark.png?raw=true "mdview screenshot darkmode")
 
 For help:
 
