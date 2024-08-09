@@ -22,3 +22,4 @@ mdview PATH/TO/MARKDOWN/FOLDERS
 
 - Add offline mathjax support
 - Add 404 for random URLs
+- Darkmode
