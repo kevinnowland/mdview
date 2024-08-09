@@ -36,6 +36,7 @@ const PageTemplate = `
     width: 98%;
     background-color: #e8e8e8;
     display: block;
+    text-align: left;
   }
   div.data h1, h2, h3, h4, h5, h6 {
     border-style: none none solid none;
@@ -133,6 +134,7 @@ const PageDarkTemplate = `
     width: 98%;
     background-color: dimgrey;
     display: block;
+    text-align: left;
   }
   div.data h1, h2, h3, h4, h5, h6 {
     border-style: none none solid none;
