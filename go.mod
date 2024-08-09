@@ -1,4 +1,4 @@
-module mdview
+module github.com/kevinnowland/mdview
 
 go 1.22.6
 
