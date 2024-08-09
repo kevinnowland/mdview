@@ -122,7 +122,7 @@ func main() {
 		Addr: fmt.Sprintf(":%d", port),
 	}
 
-	http.HandleFunc("/", IndexHandler(nav))
+	http.HandleFunc("/", DefaultHandler(nav))
 	http.HandleFunc("/favicon.ico", FaviconHandler())
 
 	for _, path := range paths {
@@ -215,7 +215,7 @@ func ConvertPathToUrl(dirPath string, path string) (string, error) {
 	return fmt.Sprintf("/%s", relative[:len(relative)-3]), nil
 }
 
-func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
+func DefaultHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
 			w.WriteHeader(http.StatusNotFound)
