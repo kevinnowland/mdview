@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io/fs"
 	"net/http"
@@ -96,12 +97,19 @@ const pageTemplate = `
 {{end}}
 `
 
-var dirPath string
+var (
+	dirPath string
+	port    int
+)
 
 func init() {
-	args := os.Args[1:]
+	flag.IntVar(&port, "port", 8080, "port to run server on")
+
+	flag.Parse()
+	args := flag.Args()
+
 	if len(args) != 1 {
-		fmt.Println("must provide exactly one argument: directory from which to serve markdown")
+		fmt.Println("must provide exactly one argument at end of command")
 		os.Exit(1)
 	}
 
@@ -188,7 +196,7 @@ func main() {
 		})
 	}
 
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	// TODO: handle expected shutdown more gracefully
 	if err != nil {
 		fmt.Printf("shutting down: %s\n", err.Error())
@@ -212,7 +220,6 @@ func GetMarkdownPaths(dirPath string) ([]string, error) {
 	return paths, nil
 }
 
-// Assumes path of form {dirPath}/foo/bar/name.md
 func GetNav(dirPath string, paths []string) (Nav, error) {
 	links := make([]Link, len(paths))
 	for i, path := range paths {
