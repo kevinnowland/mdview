@@ -58,10 +58,10 @@ const pageTemplate = `
     margin-top: 2.5%;
     float: right;
   }
-  ul {
+  div.nav ul {
     list-style-type: none;
   }
-  li {
+  div.nav li {
     padding-top: 5px;
     padding-bottom: 5px;
   }

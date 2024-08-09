@@ -21,3 +21,4 @@ mdview PATH/TO/MARKDOWN/FOLDERS
 ## TODO
 
 - Add offline mathjax support
+- Add 404 for random URLs
