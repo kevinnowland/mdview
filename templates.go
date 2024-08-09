@@ -24,7 +24,7 @@ const PageTemplate = `
     display: block;
   }
   div.data code {
-    background-color: #dcdcdc;
+    background-color: #e8e8e8;
     padding: 2px;
     font-family: monospace;
   }
@@ -34,8 +34,12 @@ const PageTemplate = `
     overflow-x: auto;
     tab-size: 4;
     width: 98%;
-    background-color: #dcdcdc;
+    background-color: #e8e8e8;
     display: block;
+  }
+  div.data h1, h2, h3, h4, h5, h6 {
+    border-style: none none solid none;
+    border-color: #dcdcdc;
   }
   div.nav {
     border-style: hidden double hidden hidden;
@@ -129,6 +133,10 @@ const PageDarkTemplate = `
     width: 98%;
     background-color: dimgrey;
     display: block;
+  }
+  div.data h1, h2, h3, h4, h5, h6 {
+    border-style: none none solid none;
+    border-color: #404040;
   }
   div.nav {
     border-style: hidden double hidden hidden;

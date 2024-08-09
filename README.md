@@ -33,4 +33,4 @@ go install github.com/kevinnowland/mdview@latest
 ## TODO
 
 - Code highlighting
-- Lines under titles
+- Refactor into single template for consistent style, more themes
