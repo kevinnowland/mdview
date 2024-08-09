@@ -7,7 +7,7 @@ import (
 	"flag"
 	"fmt"
 	"io/fs"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -106,21 +106,37 @@ const pageTemplate = `
 var (
 	dirPath string
 	port    int
+	logger  *slog.Logger
 )
 
 func init() {
+	var verbose bool
 	flag.IntVar(&port, "port", 8080, "port to run server on")
+	flag.BoolVar(&verbose, "v", false, "log verbosely")
 
 	flag.Parse()
 	args := flag.Args()
 
+	programLevel := new(slog.LevelVar)
+	if verbose {
+		programLevel.Set(slog.LevelDebug)
+	} else {
+		programLevel.Set(slog.LevelWarn)
+	}
+	logger = slog.New(slog.NewTextHandler(
+		os.Stdout,
+		&slog.HandlerOptions{Level: programLevel},
+	))
+
 	if len(args) != 1 {
-		log.Fatalf("must provide exactly one argument at end of command")
+		logger.Error("must provide exactly one argument at end of command", "numArgs", len(args))
+		os.Exit(1)
 	}
 
 	dirPath = args[0]
 	if stat, err := os.Stat(dirPath); err != nil || !stat.IsDir() {
-		log.Fatalf("provide path is not a directory: %s\n", dirPath)
+		logger.Error("provide path is not a directory", "argument", dirPath)
+		os.Exit(1)
 	}
 }
 
@@ -137,12 +153,14 @@ func main() {
 
 	paths, err := GetMarkdownPaths(dirPath)
 	if err != nil {
-		log.Fatalf("error getting markdown paths: %s\n", err.Error())
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	nav, err := GetNav(dirPath, paths)
 	if err != nil {
-		log.Fatalf("error getting navs: %s\n", err.Error())
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
 
 	server := &http.Server{
@@ -154,17 +172,18 @@ func main() {
 	for _, path := range paths {
 		url, err := ConvertPathToUrl(dirPath, path)
 		if err != nil {
-			log.Fatalf("error converting path to url: %s\n", err.Error())
+			logger.Error(err.Error())
+			os.Exit(1)
 		}
 		http.HandleFunc(url, MarkdownHandler(nav, path, md))
 	}
 
 	go func() {
-		log.Printf("Serving %s at http://localhost:%d/\n", dirPath, port)
+		fmt.Printf("\n\tServing %s at http://localhost:%d/\n\n", dirPath, port)
 		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("HTTP server error: %v", err)
+			logger.Error(err.Error())
 		}
-		log.Println("Stopped serving new connections.")
+		logger.Info("Stopped serving new connections")
 	}()
 
 	sigChan := make(chan os.Signal, 1)
@@ -175,9 +194,10 @@ func main() {
 	defer shutdownRelease()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		log.Fatalf("HTTP shutdown error: %v", err)
+		logger.Error(err.Error())
+		os.Exit(1)
 	}
-	log.Println("Graceful shutdown complete.")
+	logger.Info("Graceful shutdown complete")
 }
 
 func GetMarkdownPaths(dirPath string) ([]string, error) {
@@ -236,8 +256,7 @@ func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 		t := template.Must(template.New("page").Parse(pageTemplate))
 		err := t.ExecuteTemplate(w, "PAGE", indexPage)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			WriteInternalServerError(w, err)
 			return
 		}
 	}
@@ -247,15 +266,13 @@ func MarkdownHandler(nav Nav, path string, md goldmark.Markdown) func(w http.Res
 	return func(w http.ResponseWriter, r *http.Request) {
 		mdBytes, err := os.ReadFile(path)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			WriteInternalServerError(w, err)
 			return
 		}
 
 		mdHtml := bytes.Buffer{}
 		if err := md.Convert(mdBytes, &mdHtml); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			WriteInternalServerError(w, err)
 			return
 		}
 
@@ -268,9 +285,14 @@ func MarkdownHandler(nav Nav, path string, md goldmark.Markdown) func(w http.Res
 		err = t.ExecuteTemplate(w, "PAGE", markdownPage)
 
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			WriteInternalServerError(w, err)
 			return
 		}
 	}
+}
+
+func WriteInternalServerError(w http.ResponseWriter, err error) {
+	w.WriteHeader(http.StatusInternalServerError)
+	fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+	logger.Error(err.Error())
 }
