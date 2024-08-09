@@ -49,7 +49,7 @@ func init() {
 	var verbose bool
 	var darkmode bool
 	flag.Set("directory", "")
-	flag.IntVar(&port, "port", 8080, "port to run server on")
+	flag.IntVar(&port, "p", 8080, "port to run server on")
 	flag.BoolVar(&verbose, "v", false, "log verbosely")
 	flag.BoolVar(&darkmode, "d", false, "use darkmode")
 	flag.Usage = func() {
