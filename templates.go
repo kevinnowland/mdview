@@ -9,20 +9,33 @@ const PageTemplate = `
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
   div.data {
-    width: 65%;
+    width: 55%;
     padding-left: 2.5%;
-    padding-right: 10%;
+    padding-right: 20%;
     margin-top: 2.5%;
     float: right;
+    text-align: justify;
   }
   div.data img { 
-    max-width: 80%;
+    max-width: 100%;
     width: auto;
     height: auto;
+    margin: auto;
+    display: block;
   }
   div.data code {
-    background-color: lightgrey;
+    background-color: #dcdcdc;
     padding: 2px;
+    font-family: monospace;
+  }
+  div.data pre {
+    margin: auto;
+    padding: 1%;
+    overflow-x: auto;
+    tab-size: 4;
+    width: 98%;
+    background-color: #dcdcdc;
+    display: block;
   }
   div.nav {
     border-style: hidden double hidden hidden;
@@ -89,20 +102,33 @@ const PageDarkTemplate = `
     color: white;
   }
   div.data {
-    width: 65%;
+    width: 55%;
     padding-left: 2.5%;
-    padding-right: 10%;
+    padding-right: 20%;
     margin-top: 2.5%;
     float: right;
+    text-align: justify;
   }
   div.data img { 
-    max-width: 80%;
+    max-width: 100%;
     width: auto;
     height: auto;
+    margin: auto;
+    display: block;
   }
   div.data code {
-    background-color: dimgray;
+    background-color: dimgrey;
     padding: 2px;
+    font-family: monospace;
+  }
+  div.data pre {
+    margin: auto;
+    padding: 1%;
+    overflow-x: auto;
+    tab-size: 4;
+    width: 98%;
+    background-color: dimgrey;
+    display: block;
   }
   div.nav {
     border-style: hidden double hidden hidden;

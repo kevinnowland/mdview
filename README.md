@@ -6,7 +6,7 @@ support for mathjax (online only).
 ## Usage
 
 ```bash
-mdview PATH/TO/MARKDOWN/FOLDERS
+mdview <flags> DIRECTORY
 ```
 
 ![mdview screenshot](screenshot.png?raw=true "mdview screenshot")
@@ -32,4 +32,5 @@ go install github.com/kevinnowland/mdview@latest
 
 ## TODO
 
-- Fix inline code style with `<pre>` tags
+- Code highlighting
+- Lines under titles
