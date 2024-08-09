@@ -4,6 +4,5 @@ Display nested folders of `.md` files as a static website.
 
 ## TODO
 
-- Logs
+- Leg levels
 - Option to suppress logs
-- Verbose message on startup with link
