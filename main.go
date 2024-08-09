@@ -12,6 +12,8 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"sort"
+	"strings"
 	"syscall"
 	"text/template"
 	"time"
@@ -160,6 +162,19 @@ func GetMarkdownPaths(dirPath string) ([]string, error) {
 	if err != nil {
 		return []string{}, err
 	}
+
+	sort.Slice(paths, func(i, j int) bool {
+		a := paths[i]
+		b := paths[j]
+		nPathSegmentsA := len(strings.Split(a, string(os.PathSeparator)))
+		nPathSegmentsB := len(strings.Split(b, string(os.PathSeparator)))
+
+		if nPathSegmentsA == nPathSegmentsB {
+			return a < b
+		} else {
+			return nPathSegmentsA < nPathSegmentsB
+		}
+	})
 
 	return paths, nil
 }
