@@ -22,8 +22,14 @@ For help:
 mdview -h
 ```
 
+Note: embedded images aren't working.
+
 ## Installation
 
 ```bash
 go install github.com/kevinnowland/mdview@latest
 ```
+
+## TODO
+
+- Add support for images
