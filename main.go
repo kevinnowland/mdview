@@ -107,6 +107,7 @@ var (
 	dirPath string
 	port    int
 	logger  *slog.Logger
+	t       *template.Template
 )
 
 func init() {
@@ -138,6 +139,8 @@ func init() {
 		logger.Error("provide path is not a directory", "argument", dirPath)
 		os.Exit(1)
 	}
+
+	t = template.Must(template.New("page").Parse(pageTemplate))
 }
 
 func main() {
@@ -253,7 +256,6 @@ func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
 		}
 
-		t := template.Must(template.New("page").Parse(pageTemplate))
 		err := t.ExecuteTemplate(w, "PAGE", indexPage)
 		if err != nil {
 			WriteInternalServerError(w, err)
@@ -281,7 +283,6 @@ func MarkdownHandler(nav Nav, path string, md goldmark.Markdown) func(w http.Res
 			Data: mdHtml.String(),
 		}
 
-		t := template.Must(template.New("page").Parse(pageTemplate))
 		err = t.ExecuteTemplate(w, "PAGE", markdownPage)
 
 		if err != nil {
