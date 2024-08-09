@@ -104,7 +104,7 @@ const PageDarkTemplate = `
   <style>
   body {
     background-color: #24292e;
-    color: white;
+    color: #f5f5f5;
   }
   div.data {
     width: 55%;
@@ -159,17 +159,17 @@ const PageDarkTemplate = `
     text-decoration: none;
   }
   a:link {
-    color: white;
+    color: #f5f5f5;
   }
   a:visited {
-    color: white;
+    color: #f5f5f5;
   }
   a:hover {
-    color: white;
+    color: #f5f5f5;
     font-weight: bold;
   }
   a:active {
-    color: white;
+    color: #f5f5f5;
     font-weight: bold;
   }
   </style>
