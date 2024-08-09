@@ -36,6 +36,22 @@ const pageTemplate = `
 <head>
   <title> Markdown </title>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+  div.nav {
+    border-style: hidden double hidden hidden;
+    width: 15%;
+    padding-left: 2.5%;
+    margin-top: 2.5%;
+    float: left;
+  }
+  div.data {
+    width: 65%;
+    padding-left: 2.5%;
+    padding-right: 10%;
+    margin-top: 2.5%;
+    float: right;
+  }
+  </style>
 </head>
 <body>
 <div class="body">
@@ -78,7 +94,6 @@ func main() {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
 			html.WithXHTML(),
 		),
 	)
