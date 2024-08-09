@@ -22,7 +22,3 @@ mdview -h
 ```bash
 go install github.com/kevinnowland/mdview@latest
 ```
-
-## TODO
-
-- Change logging format
