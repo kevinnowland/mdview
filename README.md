@@ -12,11 +12,17 @@ support.
 mdview PATH/TO/MARKDOWN/FOLDERS
 ```
 
+For help:
+
+```bash
+mdview -h
+```
+
 ## Installation
 
-1. Clone this repo
-2. Build the binary
-3. Move it into your path
+```bash
+go install github.com/kevinnowland/mdview@latest
+```
 
 ## TODO
 
