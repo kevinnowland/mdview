@@ -2,13 +2,19 @@ package main
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"text/template"
+	"time"
 
 	mathjax "github.com/litao91/goldmark-mathjax"
 	"github.com/yuin/goldmark"
@@ -109,14 +115,12 @@ func init() {
 	args := flag.Args()
 
 	if len(args) != 1 {
-		fmt.Println("must provide exactly one argument at end of command")
-		os.Exit(1)
+		log.Fatalf("must provide exactly one argument at end of command")
 	}
 
 	dirPath = args[0]
 	if stat, err := os.Stat(dirPath); err != nil || !stat.IsDir() {
-		fmt.Printf("provide path is not a directory: %s\n", dirPath)
-		os.Exit(1)
+		log.Fatalf("provide path is not a directory: %s\n", dirPath)
 	}
 }
 
@@ -133,14 +137,16 @@ func main() {
 
 	paths, err := GetMarkdownPaths(dirPath)
 	if err != nil {
-		fmt.Printf("error getting markdown paths: %s\n", err.Error())
-		os.Exit(1)
+		log.Fatalf("error getting markdown paths: %s\n", err.Error())
 	}
 
 	nav, err := GetNav(dirPath, paths)
 	if err != nil {
-		fmt.Printf("error getting navs: %s\n", err.Error())
-		os.Exit(1)
+		log.Fatalf("error getting navs: %s\n", err.Error())
+	}
+
+	server := &http.Server{
+		Addr: fmt.Sprintf(":%d", port),
 	}
 
 	http.HandleFunc("/", IndexHandler(nav))
@@ -148,17 +154,30 @@ func main() {
 	for _, path := range paths {
 		url, err := ConvertPathToUrl(dirPath, path)
 		if err != nil {
-			fmt.Printf("error converting path to url: %s\n", err.Error())
-			os.Exit(1)
+			log.Fatalf("error converting path to url: %s\n", err.Error())
 		}
 		http.HandleFunc(url, MarkdownHandler(nav, path, md))
 	}
 
-	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
-	if err != nil {
-		fmt.Printf("shutting down: %s\n", err.Error())
-		os.Exit(1)
+	go func() {
+		log.Printf("Serving %s at http://localhost:%d/\n", dirPath, port)
+		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("HTTP server error: %v", err)
+		}
+		log.Println("Stopped serving new connections.")
+	}()
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+
+	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
+	defer shutdownRelease()
+
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		log.Fatalf("HTTP shutdown error: %v", err)
 	}
+	log.Println("Graceful shutdown complete.")
 }
 
 func GetMarkdownPaths(dirPath string) ([]string, error) {
