@@ -25,4 +25,4 @@ go install github.com/kevinnowland/mdview@latest
 
 ## TODO
 
-- Add 404 for random URLs
+- Change logging format

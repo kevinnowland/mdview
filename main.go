@@ -217,6 +217,13 @@ func ConvertPathToUrl(dirPath string, path string) (string, error) {
 
 func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintf(w, "404 - Not Found: %s", r.URL.Path)
+			logger.Warn("Not found", "url", r.URL.Path)
+			return
+		}
+
 		indexPage := Page{
 			Nav:  nav,
 			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
