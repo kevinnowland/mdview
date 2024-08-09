@@ -32,4 +32,4 @@ go install github.com/kevinnowland/mdview@latest
 
 ## TODO
 
-- Add support for images
+- Fix inline code style with `<pre>` tags

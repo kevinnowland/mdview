@@ -8,19 +8,28 @@ const PageTemplate = `
   <title> Markdown </title>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <style>
-  div.nav {
-    border-style: hidden double hidden hidden;
-    width: 15%;
-    padding-left: 2.5%;
-    margin-top: 2.5%;
-    float: left;
-  }
   div.data {
     width: 65%;
     padding-left: 2.5%;
     padding-right: 10%;
     margin-top: 2.5%;
     float: right;
+  }
+  div.data img { 
+    max-width: 80%;
+    width: auto;
+    height: auto;
+  }
+  div.data code {
+    background-color: lightgrey;
+    padding: 2px;
+  }
+  div.nav {
+    border-style: hidden double hidden hidden;
+    width: 15%;
+    padding-left: 2.5%;
+    margin-top: 2.5%;
+    float: left;
   }
   div.nav ul {
     list-style-type: none;
@@ -79,19 +88,28 @@ const PageDarkTemplate = `
     background-color: #24292e;
     color: white;
   }
-  div.nav {
-    border-style: hidden double hidden hidden;
-    width: 15%;
-    padding-left: 2.5%;
-    margin-top: 2.5%;
-    float: left;
-  }
   div.data {
     width: 65%;
     padding-left: 2.5%;
     padding-right: 10%;
     margin-top: 2.5%;
     float: right;
+  }
+  div.data img { 
+    max-width: 80%;
+    width: auto;
+    height: auto;
+  }
+  div.data code {
+    background-color: dimgray;
+    padding: 2px;
+  }
+  div.nav {
+    border-style: hidden double hidden hidden;
+    width: 15%;
+    padding-left: 2.5%;
+    margin-top: 2.5%;
+    float: left;
   }
   div.nav ul {
     list-style-type: none;
