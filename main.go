@@ -217,21 +217,24 @@ func ConvertPathToUrl(dirPath string, path string) (string, error) {
 
 func DefaultHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
+		if r.URL.Path == "/" {
+			indexPage := Page{
+				Nav:  nav,
+				Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
+			}
+
+			err := pageTemplate.ExecuteTemplate(w, "PAGE", indexPage)
+			if err != nil {
+				WriteInternalServerError(w, err)
+				return
+			}
+		} else if r.Host == fmt.Sprintf("localhost:%d", port) && filepath.Ext(r.URL.Path) != "" {
+			http.ServeFile(w, r, fmt.Sprintf("%s%s", dirPath, r.URL.Path))
+			return
+		} else {
 			w.WriteHeader(http.StatusNotFound)
 			fmt.Fprintf(w, "404 - Not Found: %s", r.URL.Path)
 			logger.Warn("Not found", "url", r.URL.Path)
-			return
-		}
-
-		indexPage := Page{
-			Nav:  nav,
-			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
-		}
-
-		err := pageTemplate.ExecuteTemplate(w, "PAGE", indexPage)
-		if err != nil {
-			WriteInternalServerError(w, err)
 			return
 		}
 	}
