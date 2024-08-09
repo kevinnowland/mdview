@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"context"
+	"embed"
+	_ "embed"
 	"errors"
 	"flag"
 	"fmt"
@@ -44,6 +46,9 @@ var (
 	logger       *slog.Logger
 	pageTemplate *template.Template
 )
+
+//go:embed favicon.ico
+var staticFS embed.FS
 
 func init() {
 	var verbose bool
@@ -118,6 +123,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", IndexHandler(nav))
+	http.HandleFunc("/favicon.ico", FaviconHandler())
 
 	for _, path := range paths {
 		url, err := ConvertPathToUrl(dirPath, path)
@@ -221,6 +227,12 @@ func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
 			WriteInternalServerError(w, err)
 			return
 		}
+	}
+}
+
+func FaviconHandler() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFileFS(w, r, staticFS, "favicon.ico")
 	}
 }
 
