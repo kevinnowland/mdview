@@ -143,21 +143,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	t := template.Must(template.New("page").Parse(pageTemplate))
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		indexPage := Page{
-			Nav:  nav,
-			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
-		}
-		err = t.ExecuteTemplate(w, "PAGE", indexPage)
-
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
-			return
-		}
-	})
+	http.HandleFunc("/", IndexHandler(nav))
 
 	for _, path := range paths {
 		p := path
@@ -186,6 +172,7 @@ func main() {
 				Data: mdHtml.String(),
 			}
 
+			t := template.Must(template.New("page").Parse(pageTemplate))
 			err = t.ExecuteTemplate(w, "PAGE", markdownPage)
 
 			if err != nil {
@@ -248,4 +235,21 @@ func ConvertPathToUrl(dirPath string, path string) (string, error) {
 	}
 
 	return fmt.Sprintf("/%s", relative[:len(relative)-3]), nil
+}
+
+func IndexHandler(nav Nav) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		indexPage := Page{
+			Nav:  nav,
+			Data: "<p>Welcome! Click a link in the nav to view markdown</p>",
+		}
+
+		t := template.Must(template.New("page").Parse(pageTemplate))
+		err := t.ExecuteTemplate(w, "PAGE", indexPage)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "500 - Internal Server Error: %s", err.Error())
+			return
+		}
+	}
 }
