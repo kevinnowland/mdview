@@ -249,37 +249,3 @@ func ConvertPathToUrl(dirPath string, path string) (string, error) {
 
 	return fmt.Sprintf("/%s", relative[:len(relative)-3]), nil
 }
-
-func GetMarkdownSite(dirPath string, md goldmark.Markdown) error {
-	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
-		if d.IsDir() {
-			return nil
-		}
-
-		if filepath.Ext(path) == ".md" {
-			// parse into url
-			relative, err := filepath.Rel(dirPath, path)
-			if err != nil {
-				return err
-			}
-			_ = fmt.Sprintf("/%s", relative[:len(relative)-3])
-
-			// read and add to map
-			mdBytes, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-
-			mdHtml := bytes.Buffer{}
-			if err := md.Convert(mdBytes, &mdHtml); err != nil {
-				return err
-			}
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
