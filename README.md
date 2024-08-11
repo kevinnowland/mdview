@@ -29,8 +29,6 @@ For help:
 mdview -h
 ```
 
-Note: embedded images aren't working.
-
 ## Installation
 
 ```bash
