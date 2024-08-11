@@ -29,8 +29,3 @@ Note: embedded images aren't working.
 ```bash
 go install github.com/kevinnowland/mdview@latest
 ```
-
-## TODO
-
-- Code highlighting
-- Refactor into single template for consistent style, more themes
