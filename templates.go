@@ -7,7 +7,7 @@ const PageTemplate = `
 <head>
   <title> Markdown </title>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
   div.data {
@@ -26,9 +26,10 @@ const PageTemplate = `
     display: block;
   }
   div.data code {
-    background-color: #e8e8e8;
     padding: 2px;
     font-family: monospace;
+    background-color: #22272e;
+    color: white;
   }
   div.data pre {
     margin: auto;
@@ -36,9 +37,9 @@ const PageTemplate = `
     overflow-x: auto;
     tab-size: 4;
     width: 98%;
-    background-color: #e8e8e8;
     display: block;
     text-align: left;
+    background-color: #22272e;
   }
   div.data h1, h2, h3, h4, h5, h6 {
     border-style: none none solid none;
