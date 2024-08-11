@@ -1,9 +1,11 @@
 # Markdown Site
 
-Display nested folders of `.md` files as a static website with
-support for mathjax (online only).
+Display nested folders of `.md` files as a static website with support for
+LaTeX equations via mathjax and syntax highlighting in code blocks (online only).
 
 ## Usage
+
+To serve files from a directory:
 
 ```bash
 mdview <flags> DIRECTORY
