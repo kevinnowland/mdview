@@ -11,12 +11,12 @@ To serve files from a directory:
 mdview <flags> DIRECTORY
 ```
 
-![mdview screenshot](screenshot.png? "mdview screenshot")
+![mdview screenshot](screenshot.png?raw=true "mdview screenshot")
 
 
 Set the `-d` flag to use darkmode.
 
-![mdview screenshot darkmode](screenshot_dark.png? "mdview screenshot darkmode")
+![mdview screenshot darkmode](screenshot_dark.png?raw=true "mdview screenshot darkmode")
 
 For help:
 
