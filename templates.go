@@ -7,6 +7,8 @@ const PageTemplate = `
 <head>
   <title> Markdown </title>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
   div.data {
     width: 55%;
@@ -89,6 +91,7 @@ const PageTemplate = `
     {{.Data}}
   </div>
 </div>
+<script>hljs.highlightAll();</script>
 </body>
 </html>
 {{end}}
@@ -101,6 +104,8 @@ const PageDarkTemplate = `
 <head>
   <title> Markdown </title>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
   body {
     background-color: #24292e;
@@ -122,17 +127,17 @@ const PageDarkTemplate = `
     display: block;
   }
   div.data code {
-    background-color: dimgrey;
     padding: 2px;
     font-family: monospace;
+    background-color: #0d1117;
   }
   div.data pre {
     margin: auto;
-    padding: 1%;
     overflow-x: auto;
+    background-color: #0d1117;
+    padding: 1%;
     tab-size: 4;
     width: 98%;
-    background-color: dimgrey;
     display: block;
     text-align: left;
   }
@@ -187,6 +192,7 @@ const PageDarkTemplate = `
     {{.Data}}
   </div>
 </div>
+<script>hljs.highlightAll();</script>
 </body>
 </html>
 {{end}}
